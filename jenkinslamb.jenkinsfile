@@ -1,0 +1,34 @@
+pipeline {
+  agent any
+  
+  stages {
+    stage('Deploy Lambda') {
+      steps {
+        script {
+          // Deploy the Lambda function
+          sh 'aws lambda create-function --function-name lambda_handler --runtime python3.8 --handler lambda_function.lambda_handler --role arn:aws:iam::337429779970:role/service-role/ValidationRDS-role-ocsnywcd --zip-file fileb://lambda_function.zip'
+        }
+      }
+    }
+    
+    stage('Run Tests') {
+      steps {
+        script {
+          // Run tests on RDS database
+          sh 'python3 copy.py'
+          sh 'echo success'
+        }
+      }
+    }
+    
+    stage('Store Results') {
+      steps {
+        script {
+          // Store test results in the RDS database
+          //sh 'python3 store_results.py'
+          sh 'echo sucesss x2 haha'
+        }
+      }
+    }
+  }
+}
